@@ -75,7 +75,23 @@ function getGrade(percentage) {
   return "Keep practicing";
 }
 
+/**
+ * Formats the remaining quiz time for display.
+ */
+function formatTimeLeft(seconds) {
+  return `⏱ ${seconds}s`;
+}
+
 // Lets Node.js tests load this file. Browsers ignore this block.
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { shuffle, createQuiz, answerQuestion, isQuizFinished, isCorrect, calculatePercentage, getGrade };
+  module.exports = {
+    shuffle,
+    createQuiz,
+    answerQuestion,
+    isQuizFinished,
+    isCorrect,
+    calculatePercentage,
+    getGrade,
+    formatTimeLeft,
+  };
 }

@@ -2,7 +2,16 @@
 // Run them with:  npm test
 const { test } = require("node:test");
 const assert = require("node:assert/strict");
-const { shuffle, createQuiz, answerQuestion, isQuizFinished, isCorrect, calculatePercentage, getGrade } = require("../src/quiz.js");
+const {
+  shuffle,
+  createQuiz,
+  answerQuestion,
+  isQuizFinished,
+  isCorrect,
+  calculatePercentage,
+  getGrade,
+  formatTimeLeft,
+} = require("../src/quiz.js");
 
 test("createQuiz returns a new initialized state with shuffled questions", () => {
   const questions = [{ answer: 0 }, { answer: 1 }];
@@ -24,16 +33,23 @@ test("answerQuestion returns a scored state without mutating its input", () => {
     score: 0,
     answered: false,
   };
+
   const result = answerQuestion(state, 1);
 
   assert.equal(result.correct, true);
   assert.deepEqual(result.state, { ...state, score: 1, answered: true });
   assert.notEqual(result.state, state);
-  assert.deepEqual(state, { questions: [{ answer: 1 }], current: 0, score: 0, answered: false });
+  assert.deepEqual(state, {
+    questions: [{ answer: 1 }],
+    current: 0,
+    score: 0,
+    answered: false,
+  });
 });
 
 test("answerQuestion does not increase the score for a wrong or unanswered response", () => {
   const state = { questions: [{ answer: 1 }], current: 0, score: 2, answered: false };
+
   const wrongAnswer = answerQuestion(state, 0);
   const noAnswer = answerQuestion(state, null);
 
@@ -73,4 +89,12 @@ test("shuffle keeps every item and does not change the original array", () => {
 
 test("getGrade gives an A for exactly 90%", () => {
   assert.equal(getGrade(90), "A");
+});
+
+test("formatTimeLeft includes the timer icon and seconds", () => {
+  assert.equal(formatTimeLeft(12), "⏱ 12s");
+});
+
+test("formatTimeLeft formats zero seconds", () => {
+  assert.equal(formatTimeLeft(0), "⏱ 0s");
 });
