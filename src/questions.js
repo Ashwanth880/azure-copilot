@@ -36,6 +36,31 @@ const QUESTIONS = [
     ],
     answer: 1,
   },
+  {
+    question: "In GitHub Actions, which file defines a workflow?",
+    options: [
+      ".github/workflows/main.yml",
+      "workflow.config",
+      ".git/actions.json",
+      "actions.yaml",
+    ],
+    answer: 0,
+  },
+  {
+    question: "Which GitHub Actions event triggers a workflow when code is pushed to a branch?",
+    options: ["on: pull_request", "on: issues", "on: push", "on: release"],
+    answer: 2,
+  },
+  {
+    question: "What is the main purpose of a GitHub Action step?",
+    options: [
+      "To store a secret in the repository",
+      "To run a command or script in a job",
+      "To deploy static files to GitHub Pages",
+      "To create a merge commit automatically",
+    ],
+    answer: 1,
+  },
 ];
 
 // Lets Node.js tests load this file. Browsers ignore this block.
