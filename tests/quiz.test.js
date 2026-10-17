@@ -2,7 +2,51 @@
 // Run them with:  npm test
 const { test } = require("node:test");
 const assert = require("node:assert/strict");
-const { shuffle, isCorrect, calculatePercentage, getGrade } = require("../src/quiz.js");
+const { shuffle, createQuiz, answerQuestion, isQuizFinished, isCorrect, calculatePercentage, getGrade } = require("../src/quiz.js");
+
+test("createQuiz returns a new initialized state with shuffled questions", () => {
+  const questions = [{ answer: 0 }, { answer: 1 }];
+  const state = createQuiz(questions);
+
+  assert.deepEqual([...state.questions].sort((a, b) => a.answer - b.answer), questions);
+  assert.notEqual(state.questions, questions);
+  assert.deepEqual(questions, [{ answer: 0 }, { answer: 1 }]);
+  assert.deepEqual(
+    { current: state.current, score: state.score, answered: state.answered },
+    { current: 0, score: 0, answered: false },
+  );
+});
+
+test("answerQuestion returns a scored state without mutating its input", () => {
+  const state = {
+    questions: [{ answer: 1 }],
+    current: 0,
+    score: 0,
+    answered: false,
+  };
+  const result = answerQuestion(state, 1);
+
+  assert.equal(result.correct, true);
+  assert.deepEqual(result.state, { ...state, score: 1, answered: true });
+  assert.notEqual(result.state, state);
+  assert.deepEqual(state, { questions: [{ answer: 1 }], current: 0, score: 0, answered: false });
+});
+
+test("answerQuestion does not increase the score for a wrong or unanswered response", () => {
+  const state = { questions: [{ answer: 1 }], current: 0, score: 2, answered: false };
+  const wrongAnswer = answerQuestion(state, 0);
+  const noAnswer = answerQuestion(state, null);
+
+  assert.equal(wrongAnswer.correct, false);
+  assert.equal(wrongAnswer.state.score, 2);
+  assert.equal(noAnswer.correct, false);
+  assert.equal(noAnswer.state.score, 2);
+});
+
+test("isQuizFinished detects whether the current index is past the last question", () => {
+  assert.equal(isQuizFinished({ questions: [{}, {}], current: 1 }), false);
+  assert.equal(isQuizFinished({ questions: [{}, {}], current: 2 }), true);
+});
 
 test("isCorrect returns true for the right answer", () => {
   assert.equal(isCorrect({ answer: 2 }, 2), true);
